@@ -1,0 +1,20 @@
+name: Enforce Branch Naming Convention
+
+on:
+  push:
+    branches:
+      - '*'  # Trigger on all branches
+
+jobs:
+  validate-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Branch Name
+        run: |
+          BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          echo "Branch name: $BRANCH_NAME"
+          if [[ ! "$BRANCH_NAME" =~ ^testing-env-dev$ ]]; then
+            echo "❌ Branch name does not follow the naming convention: 'testing-env-dev'."
+            exit 1
+          fi
+        shell: bash
