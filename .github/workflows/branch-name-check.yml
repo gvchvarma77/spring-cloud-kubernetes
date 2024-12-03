@@ -1,0 +1,20 @@
+name: Enforce Branch Naming Convention
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch name
+        run: |
+          BRANCH_NAME=$(echo ${{ github.ref }} | sed 's|refs/heads/||')
+          echo "Branch name: $BRANCH_NAME"
+          if [[ ! "$BRANCH_NAME" =~ ^(feature\/|bugfix\/)[a-z0-9\-_]+$ ]]; then
+            echo "❌ Branch name does not follow the naming convention."
+            exit 1
+          fi
+        shell: bash
